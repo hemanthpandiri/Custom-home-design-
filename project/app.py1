@@ -1,0 +1,30 @@
+import requests
+
+def fetch_image_from_lexica(style):
+    """Fetch an AI-generated home design image from Lexica.art based on the style."""
+    
+    # Lexica API URL with the given style as a search query
+    lexica_url = f"https://lexica.art/api/v1/search?q={style}"
+    
+    try:
+        # Sending a GET request to Lexica.art
+        response = requests.get(lexica_url)
+        response.raise_for_status()  # Raises an error if request fails
+
+        # Convert response to JSON format
+        data = response.json()
+
+        # Extract the first image URL if available
+        if "images" in data and data["images"]:
+            return data["images"][0]["src"]
+        else:
+            return "No images found for this style."
+
+    except requests.exceptions.RequestException as e:
+        return f"Error fetching image: {e}"
+
+# Example usage
+if __name__ == "__main__":
+    style = input("Enter a home design style (e.g., Modern, Rustic): ")
+    image_url = fetch_image_from_lexica(style)
+    print(f"Image URL: {image_url}")
